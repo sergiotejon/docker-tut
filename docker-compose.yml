@@ -1,0 +1,36 @@
+version: '3'
+services:
+  
+  web:
+    build: docker
+    ports:
+     - "8080:80"
+    volumes:
+      - ./app:/app
+    environment:
+      DB_NAME: test
+      DB_USER: root
+      DB_PASS: rootpass
+      DB_HOST: mysql
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MEMCACHE_HOST: memcached
+      MEMCACHE_PORT: 11211
+
+  redis:
+    image: redis:5.0.0-alpine
+
+  memcached:
+    image: memcached:1.5.11
+  
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: test
+    ports:
+      - 3306:3306
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./.data:/var/lib/mysql
